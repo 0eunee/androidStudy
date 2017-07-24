@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/seekBarpanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="100"
+            android:max="100"/>
+        <TextView
+            android:id="@+id/seekTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="100"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/seekBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="시크바 보이기"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+</LinearLayout>
