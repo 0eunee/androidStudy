@@ -33,3 +33,37 @@ Thread thread = new Thread(new Runnable() {
             }
         });
 ``` 
+
+### Runnable
+* `handler.post(Runnable r);` 매서드로 보내는 방식
+* Handler보다 조금 더 간단하게 보낼 수 있음
+
+### Runnable 사용 방법
+* `Runnable` 인터페이스를 구현하는 새로운 클래스 정의 후 `run()` 메서드 안에 실행 코드 정의
+```java
+public class ProgressRunnable implements Runnable {
+        @Override
+        public void run() {
+          // 수행 내용
+        }
+    }
+```
+* `Handler` 변수 및 새로 정의한 `Runnable` 객체 변수 선언
+```java
+ProgressRunnable runnable;
+Handler handler;
+```
+* Activity가 만들어질 때 Handler, Runnable 객체 생성(`onCreate(Bundle savedlnstanceState);` 메서드)
+```java
+runnable = new ProgressRunnable();
+handler = new Handler();
+```
+* 스레드의 결과를 화면에 표시하기 위해 `handler.post(Runnable r)` 메소드 호출
+```java
+Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(runnable);
+            }
+        });
+``` 
