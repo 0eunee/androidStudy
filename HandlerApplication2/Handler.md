@@ -63,7 +63,8 @@ handler = new Handler();
 Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                handler.post(runnable);
+                //Thread 실행
+                handler.post(runnable);
             }
         });
 ``` 
