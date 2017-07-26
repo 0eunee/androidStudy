@@ -44,7 +44,7 @@ thread.start();
 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        // 이미지 설정
+                        // switcher에 이미지 설정
                         switcher.setImageResource(R.drawable.img);
                     }
                 });
