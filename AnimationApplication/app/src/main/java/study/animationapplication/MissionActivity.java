@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,17 +34,21 @@ import java.util.Random;
  */
 
 public class MissionActivity extends AppCompatActivity {
-    ImageView player;
+    GameController controller = new GameController();
+    ImageView player, playerBoom;
     Random r = new Random();
     FrameLayout frameLayout;
     TextView scoreText;
     Handler handler = new Handler();
     Button button;
     LinearLayout linearLayout;
+    AnimationDrawable ani;
     boolean running = true;
     int displayW, displayY;
     int score = 0;
+    boolean isLife = true;
     List<RainVO> list = new ArrayList<>();
+    List<Drawable> aniList = new ArrayList<>();
 
 
     @Override
@@ -59,7 +65,8 @@ public class MissionActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.startBtn);
         scoreText = (TextView) findViewById(R.id.score);
         player = (ImageView) findViewById(R.id.player);
-
+        playerBoom = (ImageView) findViewById(R.id.playerBoom);
+        ani = (AnimationDrawable) playerBoom.getDrawable();
         init("notStart");
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +80,24 @@ public class MissionActivity extends AppCompatActivity {
         player.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                float beforePlayerX = player.getX();
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_MOVE :
+
+                        if (motionEvent.getRawX() + player.getWidth() >= displayW) {
+                            player.setX(displayW - player.getWidth());
+                            break;
+                        }
                         player.setX(motionEvent.getRawX());
+
+                        if(beforePlayerX < player.getX()) {
+                            player.setImageResource(R.drawable.playerright);
+                        } else if (beforePlayerX > player.getX()) {
+                            player.setImageResource(R.drawable.playerleft);
+                        }
                         //player.setY(motionEvent.getRawY());
                         break;
+                    case MotionEvent.ACTION_UP : player.setImageResource(R.drawable.player); break;
                 }
 
                 return true;
@@ -87,8 +107,25 @@ public class MissionActivity extends AppCompatActivity {
 
     private void init(String state) {
         if (state.equals("notStart")) {
+            Resources res = getResources();
             scoreText.setVisibility(View.GONE);
             player.setVisibility(View.GONE);
+            aniList.add(res.getDrawable(R.drawable.boom1));
+            aniList.add(res.getDrawable(R.drawable.boom2));
+            aniList.add(res.getDrawable(R.drawable.boom3));
+            aniList.add(res.getDrawable(R.drawable.boom4));
+            aniList.add(res.getDrawable(R.drawable.boom5));
+            aniList.add(res.getDrawable(R.drawable.boom6));
+            aniList.add(res.getDrawable(R.drawable.boom7));
+            aniList.add(res.getDrawable(R.drawable.boom8));
+            aniList.add(res.getDrawable(R.drawable.boom9));
+            aniList.add(res.getDrawable(R.drawable.boom10));
+            aniList.add(res.getDrawable(R.drawable.boom11));
+            aniList.add(res.getDrawable(R.drawable.boom12));
+            aniList.add(res.getDrawable(R.drawable.boom13));
+            aniList.add(res.getDrawable(R.drawable.boom14));
+            aniList.add(res.getDrawable(R.drawable.boom15));
+            aniList.add(res.getDrawable(R.drawable.boom16));
         } else if (state.equals("start")) {
             linearLayout.setVisibility(View.GONE);
             scoreText.setVisibility(View.VISIBLE);
@@ -100,7 +137,7 @@ public class MissionActivity extends AppCompatActivity {
     }
 
     private void gameInit() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 8; i++) {
             RainVO rv = new RainVO();
             ImageView imageView = new ImageView(this);
             imageView.setId(R.id.waterImg + i);
@@ -119,7 +156,33 @@ public class MissionActivity extends AppCompatActivity {
         Random r = new Random();
         return r.nextInt(5) + 1;
     }
+    int cnt = 0;
+    class aniEvent extends Thread {
+        @Override
+        public void run() {
+            for(int i = 0; i < aniList.size(); i++) {
+                final Drawable drawable = aniList.get(i);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        playerBoom.setImageDrawable(drawable);
+                    }
+                });
+                try {
+                    Thread.sleep(70);
+                } catch (Exception e) {
 
+                }
+            }
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    playerBoom.setVisibility(View.GONE);
+                }
+            });
+
+        }
+    }
     class moveEvent extends Thread {
         @Override
         public void run() {
@@ -143,6 +206,20 @@ public class MissionActivity extends AppCompatActivity {
                         for (int i = 0; i < list.size(); i++) {
                             RainVO rv = list.get(i);
                             rv.getImageView().setY(rv.getImageView().getY() + rv.getSpeed() + 1);
+                            if (controller.collisionCheck(player, rv.getImageView()) && isLife == true) {
+                                isLife = false;
+                                playerBoom.setX(player.getX());
+                                player.setVisibility(View.GONE);
+                                playerBoom.setVisibility(View.VISIBLE);
+                                //boomAnimation();
+                                Thread ani = new aniEvent();
+                                ani.start();
+                            }
+
+                            if (isLife == false) {
+                                rv.getImageView().setVisibility(View.GONE);
+                                running = false;
+                            }
 
                             if (rv.getImageView().getY() > displayY) {
                                 score++;
@@ -156,7 +233,9 @@ public class MissionActivity extends AppCompatActivity {
                         }
                     }
                 });
+
             }
         }
     }
+
 }
