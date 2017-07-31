@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/createDB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="db생성"/>
+        <Button
+            android:id="@+id/createDBBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DB생성"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/createTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="db생성"/>
+        <Button
+            android:id="@+id/createTableBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="테이블 생성"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/stateTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="상태 : "
+        android:textSize="25dp"
+        android:textStyle="bold"/>
+</LinearLayout>
